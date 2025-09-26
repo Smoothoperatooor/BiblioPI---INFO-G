@@ -2,6 +2,30 @@
 
 {% block content %}
 
-<p>jorge teste uau</p>
+<div class="mt-5 container shadow-lg p-3 bg-white rounded">
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand">Trabalhos</a>
+        <form class="form-inline">
+            <input class="form-control mr-sm-2" type="search" placeholder="Procurar" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Filtrar</button>
+        </form>
+    </nav>
+    <div class="overflow-auto" style="height:500px;">
+        <div class="row p-3">
+        {% for arquivos in arquivos %}
+            <div class="col-sm-4 p-3">	
+                <div class="card">
+                    <img src="..." class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ arquivos.nome }}</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div> 
+</div>
 
 {% endblock %}

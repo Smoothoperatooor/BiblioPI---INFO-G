@@ -1,7 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
+from .models import *
 
-# Garante que os grupos existem sempre que o admin for carregado
+admin.site.register(Arquivo)
+
 def create_default_groups():
     grupos = ["Aluno", "Professor", "Admin"]
     for nome in grupos:
