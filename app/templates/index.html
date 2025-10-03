@@ -2,15 +2,15 @@
 
 {% block content %}
 
-<div class="mt-5 container shadow-lg p-3 bg-white rounded">
-    <nav class="navbar navbar-light bg-light">
+<div class="container my-5 shadow-lg p-3 bg-white rounded" style="height: 500px;">
+    <nav class="navbar navbar-light bg-light p-3">
         <a class="navbar-brand">Trabalhos</a>
-        <form class="form-inline">
-            <input class="form-control mr-sm-2" type="search" placeholder="Procurar" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Filtrar</button>
+        <form class="d-flex">
+            <input class="form-control" type="search" placeholder="Procurar" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Filtrar</button>
         </form>
     </nav>
-    <div class="overflow-auto" style="height:500px;">
+    <div class="overflow-y-auto" style="height: 80%;">
         <div class="row p-3">
         {% for arquivos in arquivos %}
             <div class="col-sm-4 p-3">	

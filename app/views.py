@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from .models import *
 from django.views import View
+from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 
@@ -17,3 +18,15 @@ class SegundaView(View):
     def post(self, request):
         pass
 
+class LoginView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'login.html')
+    def post(self, request):
+        pass
+
+class CadastroView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'cadastro.html')
+    def post(self, request):
+        pass
+     
