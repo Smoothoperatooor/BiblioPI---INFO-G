@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="container mt-5 p-3 shadow rounded-3" style="width: 40%;">
-    <div class="p-3 mb-2 bg-body-secondary">
+    <div class="p-3 mb-3 bg-body-secondary">
        <a>Bem Vindo(a)!</a> 
     </div>
     <form>
@@ -16,8 +16,11 @@
             <label for="password">Senha</label>
             <div id="passwordHelp" class="form-text">Não mostre sua senha para ninguém</div>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-        <a class="btn btn-primary" href="{% url 'cadastro' %}" role="button">Não tem uma conta?</a>
+        <div class="d-grid gap-2 d-md-flex justify-content-end mt-5">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a class="link-opacity-50-hover" href="{% url 'cadastro' %}" role="button">Não tem uma conta?</a>
+        </div>
+        
     </form>
 </div>
     
