@@ -1,7 +1,6 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from .models import *
 from django.views import View
-from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 
@@ -18,15 +17,25 @@ class SegundaView(View):
     def post(self, request):
         pass
 
-class LoginView(View):
-    def get(self, request, *args, **kwargs):
-        return render(request, 'login.html')
-    def post(self, request):
-        pass
 
 class CadastroView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'cadastro.html')
     def post(self, request):
         pass
-     
+    
+def LoginView(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('index')  # ou o nome da sua página inicial
+        else:
+            messages.error(request, 'Usuário ou senha inválidos.')
+            return render(request, 'login.html')  # renderiza de novo o form com erro
+
+    # se for GET, exibe o formulário normalmente
+    return render(request, 'login.html')

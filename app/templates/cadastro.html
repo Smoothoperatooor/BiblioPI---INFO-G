@@ -6,7 +6,7 @@
     <div class="p-3 mb-2 bg-body-secondary">
        <a>Vamos criar sua conta!</a> 
     </div>
-    <form method="post">
+    <form method="POST">
         {% csrf_token %}
         <div class="mb-3">
             <label for="name" class="form-label">Nome</label>
@@ -33,8 +33,8 @@
                 <input class="form-control" type="file" id="formFile">
               </div>
         </div>
-        
         <button type="submit" class="btn btn-primary">Submit</button>
+        <a class="btn btn-primary" href="{% url 'login' %}" role="button">Voltar</a>
     </form>
 </div>
     
