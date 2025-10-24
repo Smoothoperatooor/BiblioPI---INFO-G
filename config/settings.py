@@ -50,6 +50,8 @@ TEMPLATES = [
     },
 ]
 
+LOGIN_REDIRECT_URL = 'app/templates/index.html' 
+LOGOUT_REDIRECT_URL = 'app/templates/login.html'
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # DATABASES = {

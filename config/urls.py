@@ -5,6 +5,7 @@ from app.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),
     path('', IndexView.as_view(), name='index'),
     path('login/', LoginView.as_view(), name='login'),
     path('cadastro/', CadastroView.as_view(), name='cadastro'),

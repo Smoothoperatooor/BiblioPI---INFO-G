@@ -27,6 +27,22 @@
             link.classList.add('active');
             }
         });
+
+    </script>
+    <script>
+        document.querySelectorAll('[data-bs-theme-value]').forEach(button => {
+        button.addEventListener('click', () => {
+            const theme = button.getAttribute('data-bs-theme-value');
+            document.documentElement.setAttribute('data-bs-theme', theme);
+
+            document.querySelectorAll('[data-bs-theme-value]').forEach(btn => {
+                btn.classList.remove('active');
+                btn.setAttribute('aria-pressed', 'false');
+            });
+            button.classList.add('active');
+            button.setAttribute('aria-pressed', 'true');
+        });
+    });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 
