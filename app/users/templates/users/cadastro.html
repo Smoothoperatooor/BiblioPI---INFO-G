@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5 p-3 shadow rounded-3" style="width: 40%;">
+    <div class="p-3 mb-2 bg-body-secondary">
+       <a>Vamos criar sua conta!</a> 
+    </div>
+    <form class="form-with-validation" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <a class="btn btn-primary" href="{% url 'login' %}" role="button">Voltar</a>
+    </form>
+</div>
+    
+
+{% endblock %}
