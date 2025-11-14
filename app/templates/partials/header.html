@@ -16,20 +16,44 @@
               <a class="nav-link" href="/">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/segunda/">Segunda</a>
-            </li>
-            {% for usuarios in usuarios %}
-              {{ usuarios.nome }}
-            {% endfor %}
-            <li class="nav-item">
-              <a class="nav-link" href="/login/">Login</a>
-            </li>
+              <a class="nav-link" href="/forum/">Fórum</a>
+            </li>  
+            {% if user.is_authenticated %}   
+              <form class="logout" action="{% url 'logout' %}" method="post">
+                {% csrf_token %}  
+                <li class="nav-item">
+                  <button type="logout-button" class="btn btn-link">Logout</button>
+                </li>         
+              </form>
+              {% else %}
+                <li class="nav-item">
+                  <a class="nav-link" href="/login/">Login</a>
+                </li>  
+              {% endif %}
           </ul>
-           <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/admin/">Admin</a>
-            </li>
-          </ul>
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                  <a class="nav-link" href="/admin/">Admin</a>
+              </li>
+            </ul>
+            <div class="btn-group dropend mb-3 me-3 bd-mode-toggle">
+              <button type="button" class="" data-bs-toggle="dropdown" aria-expanded="false">
+                Dropend
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
+                <li>
+                    <button type="button" class="dropdown-item d-flex align-items-center active" aria-pressed="true" data-bs-theme-value="light">Claro</button>
+                </li>
+                <li>
+                    <button type="button" class="dropdown-item d-flex align-items-center" aria-pressed="false" data-bs-theme-value="dark">Escuro</button>
+                </li>
+            </ul>
+            </div>
+            
+              <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (dark)">
+                  <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
+              </button>
+             
           </ul>
         </div>
       </nav>

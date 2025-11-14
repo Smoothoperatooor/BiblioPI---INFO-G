@@ -8,7 +8,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', IndexView.as_view(), name='index'),
     path('login/', views.LoginView, name='login'),
-    path('cadastro/', CadastroView.as_view(), name='cadastro'),
-    path('segunda/', SegundaView.as_view(), name='segunda'),
+    path('cadastro/', views.CadastroView, name='cadastro'),
+    path('logout/', views.logout_view, name='logout'),
+    path('forum/', ForumView.as_view(), name='forum'),
 ]
 

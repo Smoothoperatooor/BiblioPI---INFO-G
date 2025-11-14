@@ -6,19 +6,14 @@
     <div class="p-3 mb-2 bg-body-secondary">
        <a>Bem Vindo(a)!</a> 
     </div>
-    <form method="post"">
+    <form class="form-with-validation" action="{% url 'login' %}" method="post">
         {% csrf_token %}
-        <div class="form-floating mb-3 mt-3">
-            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="a" aria-describedby="emailHelp">
-            <label for="email">E-Mail</label>
-        </div>
-        <div class="form-floating mb-3">
-            <input type="password" class="form-control" placeholder="a" id="exampleInputPassword1">
-            <label for="password">Senha</label>
-            <div id="passwordHelp" class="form-text">Não mostre sua senha para ninguém</div>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-        <a class="btn btn-primary" href="{% url 'cadastro' %}" role="button">Não tem uma conta?</a>
+        {{ form }}
+        {% if request.GET.next %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}" />
+        {% endif %}
+        <button type="form-submit" class="btn btn-primary">Submit</button>
+        <a class="btn btn-primary" href="/cadastro/" role="button">Não tem uma conta?</a>
     </form>
 </div>
     
