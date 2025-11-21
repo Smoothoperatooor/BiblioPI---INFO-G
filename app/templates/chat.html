@@ -1,0 +1,32 @@
+<div class="card shadow-sm" style="height: 100vh;">
+    <div class="card-header">
+        <h4 class="mb-0">{{ topico.nome }}</h4>
+    </div>
+
+    <div class="card-body overflow-auto" style="height: 75vh;">
+        {% for mensagem in mensagens %}
+            <div class="mb-3">
+                <strong>{{ mensagem.user }}</strong>
+                <small class="text-muted">{{ mensagem.criado_em|date:"H:i" }}</small>
+                <p class="mb-1">{{ mensagem.texto }}</p>
+            </div>
+        {% empty %}
+            <p>Nenhuma mensagem ainda.</p>
+        {% endfor %}
+    </div>
+
+    {% if user.is_authenticated %}
+    <form method="POST" class="card-footer bg-white">
+        {% csrf_token %}
+        <div class="input-group">
+            <input name="texto" type="text" class="form-control"
+                   placeholder="Digite sua mensagem..." required>
+            <button class="btn btn-primary" type="submit">Enviar</button>
+        </div>
+    </form>
+    {% else %}
+        <div class="card-footer bg-white text-muted">
+            Faça login para enviar mensagens.
+        </div>
+    {% endif %}
+</div>

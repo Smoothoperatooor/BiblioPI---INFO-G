@@ -1,0 +1,29 @@
+<div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-body-tertiary"
+    style="width: 380px; height: 100vh; overflow-y: auto; overflow-x: hidden;">
+    <div class="row g-3">
+        <h2 class=" col-md-6 p-3 fs-5 fw-semibold">Tópicos</h2>
+        <div class="col-md-6 p-3">
+            {% if user.is_authenticated %}
+            <button type="button" class="btn btn-primary">Adicionar Tópico</button>
+            {% else %}
+            <button type="button" class="btn btn-primary" disabled>Login nescessário</button>
+            {% endif %}
+        </div>
+    </div>
+    <div class="list-group list-group-flush border-bottom scrollarea">
+        {% for topico in topicos %}
+        <a href="{% url 'chat_topico' topico.id %}" class="list-group-item list-group-item-action py-3 lh-sm">
+            <div class="d-flex w-100 align-items-center justify-content-between">
+                <strong class="mb-1">{{ topico.nome }}</strong>
+                <small>Wed</small>
+            </div>
+            <div class="col-10 mb-1 small">
+                Some placeholder content in a paragraph below the heading and date.
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+<script src="../assets/dist/js/bootstrap.bundle.min.js" class="astro-vvvwv3sm"></script>
+<script src="sidebars.js" class="astro-vvvwv3sm"></script>
+

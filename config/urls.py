@@ -10,6 +10,7 @@ urlpatterns = [
     path('login/', views.LoginView, name='login'),
     path('cadastro/', views.CadastroView, name='cadastro'),
     path('logout/', views.logout_view, name='logout'),
-    path('forum/', ForumView.as_view(), name='forum'),
+     path("forum/", ForumView.as_view(), name="forum"),
+    path("forum/<int:topico_id>/", ChatView, name="chat_topico"),
 ]
 

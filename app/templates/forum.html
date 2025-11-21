@@ -1,7 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="container-fluid">
+    <div class="row h-100">
 
-Segunda página
+        <!-- Sidebar -->
+        <div class="col-3 h-100 p-0 border-end">
+            {% include "partials/sidebar.html" %}
+        </div>
+        <!-- Chat dinâmico -->
+        <div class="col-9 h-100 p-0">
+            {% block chat %}{% endblock %}
+        </div>
 
+    </div>
+</div>
 {% endblock %}
