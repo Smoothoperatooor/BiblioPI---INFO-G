@@ -1,32 +1,45 @@
-<div class="card shadow-sm" style="height: 100vh;">
-    <div class="card-header">
-        <h4 class="mb-0">{{ topico.nome }}</h4>
-    </div>
+<style>
+    .msg {
+        transition: 0.2s ease;
+    }
+    .msg:hover{
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        transform: translateY(-2px);
+    }
+</style>
 
-    <div class="card-body overflow-auto" style="height: 75vh;">
+<div class="container p-5 bg-body-tertiary" style="min-height: 100vh;">
+    <div class="container overflow-y-auto" style="height: 80vh;">
         {% for mensagem in mensagens %}
-            <div class="mb-3">
-                <strong>{{ mensagem.user }}</strong>
-                <small class="text-muted">{{ mensagem.criado_em|date:"H:i" }}</small>
-                <p class="mb-1">{{ mensagem.texto }}</p>
-            </div>
+        <div class="bg-body-secondary flex-column border rounded-4 mb-3 p-3 msg">
+            <strong>{{ mensagem.usuario.username }}</strong>
+            <small class="text-muted">{{ mensagem.criado_em|date:"H:i" }}</small>
+            <p class="mb-1">{{ mensagem.texto }}</p>
+        </div>
         {% empty %}
-            <p>Nenhuma mensagem ainda.</p>
+        <div class="alert alert-warning" role="alert">
+            Esse forum ainda não tem mensagens, seja o primeiro!
+        </div>
         {% endfor %}
-    </div>
 
-    {% if user.is_authenticated %}
-    <form method="POST" class="card-footer bg-white">
-        {% csrf_token %}
-        <div class="input-group">
-            <input name="texto" type="text" class="form-control"
-                   placeholder="Digite sua mensagem..." required>
-            <button class="btn btn-primary" type="submit">Enviar</button>
-        </div>
-    </form>
-    {% else %}
-        <div class="card-footer bg-white text-muted">
-            Faça login para enviar mensagens.
-        </div>
-    {% endif %}
+    </div>
+    <div class="container">
+        {% if user.is_authenticated %}
+        <form method="POST">
+            {% csrf_token %}
+            <div class="input-group mb-3">
+                <button class="btn btn-outline-secondary" type="submit">Enviar</button>
+                <input name="texto" type="text" class="form-control" placeholder='Conversar em #{{ topico.nome }}'
+                    required">
+            </div>
+        </form>
+        {% else %}
+        <fieldset disabled>
+            <div class="input-group mb-3">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon1">Enviar</button>
+                <input name="texto" type="text" class="form-control" placeholder='Precisa estar logado' required">
+            </div>
+        </fieldset>
+        {% endif %}
+    </div>
 </div>

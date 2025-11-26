@@ -25,7 +25,8 @@ class Arquivo(models.Model):
 
 class Topico(models.Model):
     nome = models.CharField(max_length=200, verbose_name="Nome do post")    
-
+    desc = models.CharField(max_length=200, verbose_name="Descrição do post") 
+    
     def __str__(self):
         return self.nome
     
@@ -34,9 +35,9 @@ class Topico(models.Model):
         verbose_name_plural = "Topicos"
 
 class Mensagem(models.Model):
-    topico = models.ForeignKey(Topico, on_delete=models.CASCADE, related_name="mensagens")
+    topico = models.ForeignKey(Topico, on_delete=models.CASCADE)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
-    texto = models.TextField()
+    texto = models.CharField(max_length=600, verbose_name="Nome do post")  
     criado_em = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

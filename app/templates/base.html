@@ -17,11 +17,11 @@
     </main>
 
     {% include "partials/footer.html" %}
-    
+
     <script>
         const currentLocation = window.location.pathname;
         const menuItems = document.querySelectorAll('.nav-link');
-    
+
         menuItems.forEach(link => {
             if (link.getAttribute('href') === currentLocation) {
                 link.classList.add('active');
@@ -31,40 +31,42 @@
 
     <script>
         // Funções para armazenar e recuperar tema
-            const getStoredTheme = () => localStorage.getItem('theme');
-            const setStoredTheme = theme => localStorage.setItem('theme', theme);
-            const getPreferredTheme = () => {
-                const storedTheme = getStoredTheme();
-                if (storedTheme) return storedTheme;
-                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-            };
+        const getStoredTheme = () => localStorage.getItem('theme');
+        const setStoredTheme = theme => localStorage.setItem('theme', theme);
+        const getPreferredTheme = () => {
+            const storedTheme = getStoredTheme();
+            if (storedTheme) return storedTheme;
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        };
 
-            // Aplica o tema atual ao carregar a página
-            const applyTheme = theme => {
-                document.documentElement.setAttribute('data-bs-theme', theme);
-                document.querySelectorAll('[data-bs-theme-value]').forEach(btn => {
-                    btn.classList.remove('active');
-                    btn.setAttribute('aria-pressed', 'false');
-                    if (btn.getAttribute('data-bs-theme-value') === theme) {
-                        btn.classList.add('active');
-                        btn.setAttribute('aria-pressed', 'true');
-                    }
-                });
-            };
-
-            // Aplica o tema preferido ao carregar
-            applyTheme(getPreferredTheme());
-
-            // Evento de clique nos botões
-            document.querySelectorAll('[data-bs-theme-value]').forEach(button => {
-                button.addEventListener('click', () => {
-                    const theme = button.getAttribute('data-bs-theme-value');
-                    setStoredTheme(theme); // salva no localStorage
-                    applyTheme(theme);     // aplica imediatamente
-                });
+        // Aplica o tema atual ao carregar a página
+        const applyTheme = theme => {
+            document.documentElement.setAttribute('data-bs-theme', theme);
+            document.querySelectorAll('[data-bs-theme-value]').forEach(btn => {
+                btn.classList.remove('active');
+                btn.setAttribute('aria-pressed', 'false');
+                if (btn.getAttribute('data-bs-theme-value') === theme) {
+                    btn.classList.add('active');
+                    btn.setAttribute('aria-pressed', 'true');
+                }
             });
+        };
+
+        // Aplica o tema preferido ao carregar
+        applyTheme(getPreferredTheme());
+
+        // Evento de clique nos botões
+        document.querySelectorAll('[data-bs-theme-value]').forEach(button => {
+            button.addEventListener('click', () => {
+                const theme = button.getAttribute('data-bs-theme-value');
+                setStoredTheme(theme); // salva no localStorage
+                applyTheme(theme);     // aplica imediatamente
+            });
+        });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
 
 </body>
 

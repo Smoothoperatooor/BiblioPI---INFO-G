@@ -35,39 +35,42 @@ class IndexView(View):
         }
         return render(request, 'index.html', context)
 
-
 class ForumView(View):
-    def get(self, request, *args, **kwargs):
+    def get(self, request, topico_id=None):
         topicos = Topico.objects.all()
-        return render(request, 'forum.html', {
-            'topicos': topicos,
-            'chat_ativo': False  # importante
-        })
+        if topico_id is None:
+            return render(request, "forum.html", {"topicos": topicos, "topico": None, "mensagens": None})
+        topico = get_object_or_404(Topico, id=topico_id)
+        mensagens = Mensagem.objects.filter(topico=topico).order_by("criado_em")
+        return render(request, "forum.html", {"topicos": topicos, "topico": topico, "mensagens": mensagens})
 
+    def post(self, request, topico_id=None):
+        # evita POST se usuário não autenticado
+        if not request.user.is_authenticated:
+            return redirect("login")
 
-def ChatView(request, topico_id):
-    topico = get_object_or_404(Topico, id=topico_id)
-    mensagens = topico.mensagens.all().order_by("criado_em")
+        # precisa do topico_id para salvar a mensagem
+        if topico_id is None:
+            return redirect("forum")  # ou onde fizer sentido
 
-    # Se enviar mensagem
-    if request.method == "POST":
-        texto = request.POST.get("texto")
-        if texto and request.user.is_authenticated:
-            Mensagem.objects.create(
-                topico=topico,
-                usuario=request.user,
-                texto=texto
+        topico = get_object_or_404(Topico, id=topico_id)
+        texto = request.POST.get("texto", "").strip()
+        if texto:
+            Mensagem.objects.create(usuario=request.user, topico=topico, texto=texto)
+
+        return redirect("forum", topico_id=topico.id)
+    
+class CriarTopicoView(View):
+    def post(self, request):
+        nome = request.POST.get("nome")
+        desc = request.POST.get("desc")
+
+        if nome and desc and request.user.is_authenticated:
+            topico = Topico.objects.create(
+                nome=nome,
+                desc=desc,
             )
-        return redirect("chat_topico", topico_id=topico_id)  # corrigido
-
-    # Renderiza o chat dentro do layout do fórum
-    return render(request, "forum.html", {
-        "topico": topico,
-        "mensagens": mensagens,
-        "chat_ativo": True,               # ativa o container do chat
-        "topicos": Topico.objects.all(),  # mantém a sidebar funcionando
-    })
-
+            return redirect("forum", topico_id=topico.id)
 
 def CadastroView(request):
     if request.method == "POST": 
