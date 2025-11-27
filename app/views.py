@@ -10,30 +10,44 @@ from django.db.models import Q
 
 class IndexView(View):
     def get(self, request, *args, **kwargs):
-        query = request.GET.get('q', '')  # Parâmetro de busca
-        categoria = request.GET.get('categoria', '')  # Filtro por categoria
-        
+        # Check user role
+        is_professor = False
+        if request.user.is_authenticated:
+            try:
+                if request.user.usuario.role == "professor":
+                    is_professor = True
+                    return render(request, 'professor/indexPRO.html', context)
+            except:
+                pass  # in case user has no Usuario record
+
+        # Search
+        query = request.GET.get('q', '')
+        categoria = request.GET.get('categoria', '')
+
         arquivos = Arquivo.objects.all()
-        
-        # Aplicar filtros de busca
+
+        # Filter by query
         if query:
             arquivos = arquivos.filter(
                 Q(nome__icontains=query) |
                 Q(descricao__icontains=query) |
                 Q(categoria__icontains=query)
             )
-        
-        # Filtro por categoria
+
+        # Filter by category
         if categoria:
             arquivos = arquivos.filter(categoria=categoria)
-        
+
         context = {
             'arquivos': arquivos,
             'query': query,
             'categoria_selecionada': categoria,
-            'categorias': Arquivo.CATEGORIAS
+            'categorias': Arquivo.CATEGORIAS,
+            'is_professor': is_professor,
         }
+
         return render(request, 'index.html', context)
+
 
 class ForumView(View):
     def get(self, request, topico_id=None):
@@ -72,16 +86,36 @@ class CriarTopicoView(View):
             )
             return redirect("forum", topico_id=topico.id)
 
-def CadastroView(request):
-    if request.method == "POST": 
-        form = UserCreationForm(request.POST) 
-        if form.is_valid(): 
-            login(request, form.save())
-            return redirect("index")
-    else:
-        form = UserCreationForm()
-    return render(request, "cadastro.html", { "form": form })
+class NovoArquivoView(View):
+    def post(self, request, *args, **kwargs):
+        nome = request.POST.get("nome")
+        descricao = request.POST.get("descricao")
+        categoria = request.POST.get("categoria")
+        arquivo = request.POST.get("arquivo")
 
+        Arquivo.objects.create(
+            nome=nome,
+            descricao=descricao,
+            categoria=categoria,
+            arquivo=arquivo
+        )
+
+        return redirect("index")
+        
+class CadastroView(View):
+    def get(self, request):
+        return render(request, "cadastro.html")
+
+    def post(self, request):
+        username = request.POST['username']
+        password = request.POST['password']
+        role = request.POST['role']
+
+        user = User.objects.create_user(username=username, password=password)
+
+        Usuario.objects.create(user=user, role=role)
+
+        return redirect("login")
 
 def LoginView(request):
     if request.method == "POST":

@@ -1,6 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class Usuario(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    ROLE_CHOICES = [
+        ('aluno', 'Aluno'),
+        ('professor', 'Professor'),
+    ]
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
 
 class Arquivo(models.Model):
     CATEGORIAS = (
@@ -12,7 +19,7 @@ class Arquivo(models.Model):
     
     nome = models.CharField(max_length=200, verbose_name="Nome do Arquivo")
     descricao = models.TextField(verbose_name="Descrição", blank=True, null=True)
-    arquivo = models.FileField(upload_to='arquivos/', verbose_name="Arquivo", blank=True, null=True)
+    arquivo = models.CharField(max_length=200, verbose_name="Link do Arquivo")
     categoria = models.CharField(max_length=20, choices=CATEGORIAS, default='trabalho')
     data_upload = models.DateTimeField(auto_now_add=True)
     
