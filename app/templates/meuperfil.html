@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <h2 class="text-center mb-4">Meu Perfil</h2>
+
+    <!-- Cartões de Resumo -->
+    <div class="row text-center mb-4">
+
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3">
+                <h4 class="text-primary">Mensagens</h4>
+                <h2>{{ total_mensagens }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3">
+                <h4 class="text-success">Arquivos Enviados</h4>
+                <h2>{{ total_arquivos }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3">
+                <h4 class="text-info">Dias na Plataforma</h4>
+                <h2>{{ dias_no_sistema }}</h2>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Gráfico -->
+    <div class="card p-4 shadow-sm">
+        <h4 class="text-center mb-3">Estatísticas do Usuário</h4>
+        <canvas id="perfilChart"></canvas>
+    </div>
+
+</div>
+
+<!-- Script do Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const ctx = document.getElementById('perfilChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ labels| safe }},
+        datasets: [{
+            label: 'Atividades',
+            data: {{ data| safe }},
+        borderWidth: 2,
+        backgroundColor: [
+            'rgba(54, 162, 235, 0.6)',
+            'rgba(75, 192, 192, 0.6)',
+            'rgba(153, 102, 255, 0.6)',
+        ],
+        borderColor: [
+            'rgba(54, 162, 235, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+        ],
+            }]
+        },
+        options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+    });
+</script>
+
+{% endblock %}
