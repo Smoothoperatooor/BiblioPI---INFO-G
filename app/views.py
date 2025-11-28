@@ -135,6 +135,18 @@ def deletar_arquivo(request, arquivo_id):
     arquivo.delete()
     return redirect("index")
 
+@login_required
+def deletar_topico(request, topico_id):
+    topico = get_object_or_404(Topico, id=topico_id)
+    
+    # professor pode deletar qualquer tópico
+    if request.user.usuario.role == "professor" or topico.usuario == request.user:
+        topico.delete()
+        return redirect("sidebar")  # ou para a página de tópicos
+
+    # se não tiver permissão
+    return redirect("sidebar")
+
 class CadastroView(View):
     def get(self, request):
         return render(request, "cadastro.html")

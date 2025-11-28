@@ -2,20 +2,38 @@
 
 {% block content %}
 
-<div class="container mt-5 p-3 shadow rounded-3" style="width: 40%;">
-    <div class="p-3 mb-2 bg-body-secondary">
-       <a>Bem Vindo(a)!</a> 
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow rounded-3 p-4" style="max-width: 400px; width: 100%;">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4">Bem-vindo(a)!</h3>
+
+            <form action="{% url 'login' %}" method="post">
+                {% csrf_token %}
+
+                <!-- Username -->
+                <div class="mb-3">
+                    <label for="username" class="form-label">Usuário</label>
+                    <input type="text" class="form-control" name="username" id="username" placeholder="Digite seu usuário" required>
+                </div>
+
+                <!-- Password -->
+                <div class="mb-3">
+                    <label for="password" class="form-label">Senha</label>
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Digite sua senha" required>
+                </div>
+
+                {% if request.GET.next %}
+                    <input type="hidden" name="next" value="{{ request.GET.next }}">
+                {% endif %}
+
+                <!-- Botões -->
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Entrar</button>
+                    <a href="/cadastro/" class="btn btn-outline-secondary">Criar conta</a>
+                </div>
+            </form>
+        </div>
     </div>
-    <form class="form-with-validation" action="{% url 'login' %}" method="post">
-        {% csrf_token %}
-        {{ form }}
-        {% if request.GET.next %}
-            <input type="hidden" name="next" value="{{ request.GET.next }}" />
-        {% endif %}
-        <button type="form-submit" class="btn btn-primary">Submit</button>
-        <a class="btn btn-primary" href="/cadastro/" role="button">Não tem uma conta?</a>
-    </form>
 </div>
-    
 
 {% endblock %}

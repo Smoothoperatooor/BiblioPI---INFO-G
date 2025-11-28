@@ -2,26 +2,43 @@
 
 {% block content %}
 
-<div class="container mt-5 p-3 shadow rounded-3" style="width: 40%;">
-    <div class="p-3 mb-2 bg-body-secondary">
-       <a>Vamos criar sua conta!</a> 
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow rounded-3 p-4" style="max-width: 400px; width: 100%;">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4">Vamos criar sua conta!</h3>
+
+            <form action="{% url 'cadastro' %}" method="post">
+                {% csrf_token %}
+
+                <!-- Username -->
+                <div class="mb-3">
+                    <label for="username" class="form-label">Usuário</label>
+                    <input type="text" class="form-control" name="username" id="username" placeholder="Digite seu usuário" required>
+                </div>
+
+                <!-- Password -->
+                <div class="mb-3">
+                    <label for="password" class="form-label">Senha</label>
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Digite sua senha" required>
+                </div>
+
+                <!-- Role -->
+                <div class="mb-3">
+                    <label for="role" class="form-label">Selecione seu papel</label>
+                    <select name="role" id="role" class="form-select" required>
+                        <option value="aluno">Aluno</option>
+                        <option value="professor">Professor</option>
+                    </select>
+                </div>
+
+                <!-- Botões -->
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                    <a href="/login/" class="btn btn-outline-secondary">Voltar para Login</a>
+                </div>
+            </form>
+        </div>
     </div>
-    <form class="form-with-validation" action="{% url 'cadastro' %}" method="post">
-        {% csrf_token %}
-        
-        <input type="text" name="username" placeholder="Username" required>
-        <input type="password" name="password" placeholder="Password" required>
-        
-        <label for="role">Select your role:</label>
-        <select name="role" id="role" required>
-            <option value="aluno">Student</option>
-            <option value="professor">Teacher</option>
-        </select>
-        
-        <button type="form-submit" class="btn btn-primary">Submit</button>
-        <a class="btn btn-primary" href="/login/" role="button">Voltar</a>
-    </form>
 </div>
-    
 
 {% endblock %}

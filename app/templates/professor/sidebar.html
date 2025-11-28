@@ -7,7 +7,8 @@
 
     <div class="list-group list-group-flush border-bottom scrollarea" id="lista-topicos">
         {% for topico in topicos %}
-        <a href="{% url 'forum' topico.id %}" class="list-group-item list-group-item-action py-3 lh-sm" aria-current="true">
+        <a href="{% url 'forum' topico.id %}" class="list-group-item list-group-item-action py-3 lh-sm"
+            aria-current="true">
             <div class="d-flex w-100 align-items-center justify-content-between">
                 <strong class="mb-1">{{ topico.nome }}</strong>
                 <small>{{ topico.criado_em|date:"D" }}</small>
@@ -15,19 +16,14 @@
             <div class="col-10 mb-1 small">
                 <p>{{ topico.desc }}</p>
             </div>
-        
-            {% if user.is_authenticated %}
-                {% if user.usuario.role == "professor" or topico.usuario == user %}
-                    <div class="mt-2">
-                        <form action="{% url 'deletar_topico' topico.id %}" method="post" class="d-inline">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger btn-sm">Deletar</button>
-                        </form>
-                    </div>
-                {% endif %}
-            {% endif %}
         </a>
         {% endfor %}
+        
+        <a href="{% url 'deletar_topico' topico.id %}" class="btn btn-danger btn-sm"
+            onclick="return confirm('Tem certeza que deseja deletar este arquivo?')">
+            Deletar
+        </a>
+        
     </div>
     <div class="row">
         <div class="col-md-6 p-3">

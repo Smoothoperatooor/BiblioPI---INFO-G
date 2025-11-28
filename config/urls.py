@@ -18,6 +18,7 @@ urlpatterns = [
 
     path("novo-arquivo/", NovoArquivoView.as_view(), name="novo_arquivo"),
     path('arquivo/<int:arquivo_id>/deletar/', views.deletar_arquivo, name='deletar_arquivo'),
+    path('topico/<int:topico_id>/deletar/', views.deletar_topico, name='deletar_topico'),
 
     path("meuperfil/", views.meu_perfil_view, name="meu_perfil"),
 ]
