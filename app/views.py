@@ -1,28 +1,25 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from django.views import View
-from django.contrib import messages
-from django.contrib.auth import authenticate
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm 
+from django.contrib.auth.forms import AuthenticationForm 
 from django.contrib.auth import login, logout
-from django.db.models import Q
-from django.contrib.auth.decorators import login_required
+from django.db.models import Q #SERVE PARA O FILTRO
 from django.utils.timezone import now
 from django.contrib.auth.models import User
 
 
 class IndexView(View):
     def get(self, request, *args, **kwargs):
-        query = request.GET.get('q', '')
+        filtro = request.GET.get('valcate', '')
         categoria = request.GET.get('categoria', '')
 
         arquivos = Arquivo.objects.all()
 
-        if query:
+        if filtro:
             arquivos = arquivos.filter(
-                Q(nome__icontains=query) |
-                Q(descricao__icontains=query) |
-                Q(categoria__icontains=query)
+                Q(nome__icontains=filtro) |
+                Q(descricao__icontains=filtro) |
+                Q(categoria__icontains=filtro)
             )
 
         if categoria:
@@ -30,21 +27,13 @@ class IndexView(View):
 
         context = {
             'arquivos': arquivos,
-            'query': query,
+            'filtro': filtro,
             'categoria_selecionada': categoria,
             'categorias': Arquivo.CATEGORIAS,
         }
 
-        # USUÁRIO É PROFESSOR?
-        if request.user.is_authenticated:
-            if hasattr(request.user, "usuario") and request.user.usuario.role == "professor":
-                context['is_professor'] = True
-                return render(request, 'professor/index.html', context)
-
-        # caso contrário, é aluno
-        context['is_professor'] = False
-        return render(request, 'index.html', context)
-
+    
+        return render(request, "index.html", context)
 
 class ForumView(View):
     def get(self, request, topico_id=None):
@@ -67,13 +56,6 @@ class ForumView(View):
         })
 
     def post(self, request, topico_id=None):
-        if not request.user.is_authenticated:
-            return redirect("login")
-
-        # se a URL não tiver /forum/<id>/ → erro 405
-        if topico_id is None:
-            return redirect("forum")
-
         topico = get_object_or_404(Topico, id=topico_id)
         texto = request.POST.get("texto", "").strip()
 
@@ -92,11 +74,8 @@ class CriarTopicoView(View):
         nome = request.POST.get("nome")
         desc = request.POST.get("desc")
 
-        if nome and desc and request.user.is_authenticated:
-            topico = Topico.objects.create(nome=nome, desc=desc)
-            return redirect("forum", topico_id=topico.id)
-
-        return redirect("forum")
+        topico = Topico.objects.create(nome=nome, desc=desc)
+        return redirect("forum", topico_id=topico.id)
 
 
 class NovoArquivoView(View):
@@ -104,8 +83,8 @@ class NovoArquivoView(View):
         nome = request.POST.get("nome")
         descricao = request.POST.get("descricao")
         categoria = request.POST.get("categoria")
-        arquivo = request.POST.get("arquivo")  # CORRIGIDO: recebe arquivo via upload
-        usuario=request.POST.get("user")
+        arquivo = request.POST.get("arquivo") 
+        usuario = request.POST.get("user")
         
         Arquivo.objects.create(
             nome=nome,
@@ -116,37 +95,7 @@ class NovoArquivoView(View):
         )
 
         return redirect("index")
-
-@login_required
-def deletar_arquivo(request, arquivo_id):
-    arquivo = get_object_or_404(Arquivo, id=arquivo_id)
-
-    usuario_ext = request.user.usuario  
-
-    # Professor pode deletar qualquer arquivo
-    if usuario_ext.role == "professor":
-        arquivo.delete()
-        return render(request, "professor/index.html")
-
-    # Aluno só apaga o que é dele
-    if arquivo.usuario != request.user:
-        return redirect("index")
-
-    arquivo.delete()
-    return redirect("index")
-
-@login_required
-def deletar_topico(request, topico_id):
-    topico = get_object_or_404(Topico, id=topico_id)
     
-    # professor pode deletar qualquer tópico
-    if request.user.usuario.role == "professor" or topico.usuario == request.user:
-        topico.delete()
-        return redirect("sidebar")  # ou para a página de tópicos
-
-    # se não tiver permissão
-    return redirect("sidebar")
-
 class CadastroView(View):
     def get(self, request):
         return render(request, "cadastro.html")
@@ -154,44 +103,29 @@ class CadastroView(View):
     def post(self, request):
         username = request.POST['username']
         password = request.POST['password']
-        role = request.POST['role']
+        funcao = request.POST['funcao']
 
         user = User.objects.create_user(username=username, password=password)
-        Usuario.objects.create(user=user, role=role)
+        Usuario.objects.create(user=user, funcao=funcao)
 
         return redirect("login")
+    
 
-
-def LoginView(request):
-    if request.method == "POST":
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-
-            next_url = request.POST.get("next")
-            if next_url:
-                return redirect(next_url)
-
-            return redirect("index")
-    else:
-        form = AuthenticationForm()
-
-    return render(request, "login.html", {"form": form})
-
-
-def logout_view(request):
-    if request.method == "POST":
-        logout(request)
-        return redirect("index")
-
-
-@login_required
-def meu_perfil_view(request):
+def MeuPerfilView(request):
     user = request.user
 
     total_mensagens = Mensagem.objects.filter(usuario=user).count()
     total_arquivos = Arquivo.objects.filter(usuario=user).count()
+
+    # SISTEMA DE NÍVEL
+    if total_mensagens >= 50:
+        nivel = "Lendário"
+    elif total_mensagens >= 20:
+        nivel = "Veterano"
+    elif total_mensagens >= 5:
+        nivel = "Iniciante"
+    else:
+        nivel = None
 
     tempo_total = now() - user.date_joined
     dias_no_sistema = tempo_total.days
@@ -207,6 +141,46 @@ def meu_perfil_view(request):
         "horas_totais": horas_totais,
         "labels": labels,
         "data": data,
+        "nivel": nivel, 
     }
 
     return render(request, "meuperfil.html", context)
+
+
+def DeletarTrabalho(request, arquivo_id):
+    arquivo = get_object_or_404(Arquivo, id=arquivo_id)
+ 
+
+    arquivo.delete()
+    return redirect("index")
+
+
+def DeletarTopico(request, topico_id):
+    topico = get_object_or_404(Topico, id=topico_id)
+    
+   
+    topico.delete()
+    return redirect("forumLista") 
+
+
+def LoginView(request):
+    if request.method == "POST":
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+
+            return redirect("index")
+    else:
+        form = AuthenticationForm()
+
+    return render(request, "login.html", {"form": form})
+
+
+def LogoutView(request):
+    if request.method == "POST":
+        logout(request)
+        return redirect("index")
+
+
+

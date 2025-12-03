@@ -1,25 +1,28 @@
 from django.contrib import admin
-from django.urls import include, path
-from django.views.generic import TemplateView
+from django.urls import path
 from app.views import *
 from app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    #INDEX
     path('', IndexView.as_view(), name='index'),
-    
+    path('novoArquivo/', NovoArquivoView.as_view(), name="novoArquivo"),
+    path('arquivo/<int:arquivo_id>/deletar/', views.DeletarTrabalho, name='deletarArquivo'),
+
+    #LOGIN E CADASTRO
     path('login/', views.LoginView, name='login'),
     path('cadastro/', CadastroView.as_view(), name='cadastro'),
-    path('logout/', views.logout_view, name='logout'),
-    path("forum/", ForumView.as_view(), name='forum_lista'),
-    path("forum/<int:topico_id>/", ForumView.as_view(), name="forum"),
-    path("forum/novo-topico/", views.CriarTopicoView.as_view(), name="novo_topico"),
+    path('logout/', views.LogoutView, name='logout'),
 
-    path("novo-arquivo/", NovoArquivoView.as_view(), name="novo_arquivo"),
-    path('arquivo/<int:arquivo_id>/deletar/', views.deletar_arquivo, name='deletar_arquivo'),
-    path('topico/<int:topico_id>/deletar/', views.deletar_topico, name='deletar_topico'),
+    #FÓRUM
+    path('forum/', ForumView.as_view(), name='forumLista'),
+    path('forum/<int:topico_id>/', ForumView.as_view(), name="forum"),
+    path('forum/novoTopico/', views.CriarTopicoView.as_view(), name="novoTopico"),
+    path('topico/<int:topico_id>/deletar/', views.DeletarTopico, name='deletarTopico'),
 
-    path("meuperfil/", views.meu_perfil_view, name="meu_perfil"),
+    #MEUPERFIL
+    path("meuperfil/", views.MeuPerfilView, name="meuPerfil"),
 ]
 

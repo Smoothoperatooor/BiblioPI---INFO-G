@@ -6,32 +6,29 @@
     <div class="card shadow rounded-3 p-4" style="max-width: 400px; width: 100%;">
         <div class="card-body">
             <h3 class="card-title text-center mb-4">Vamos criar sua conta!</h3>
-
             <form action="{% url 'cadastro' %}" method="post">
                 {% csrf_token %}
 
-                <!-- Username -->
                 <div class="mb-3">
                     <label for="username" class="form-label">Usuário</label>
-                    <input type="text" class="form-control" name="username" id="username" placeholder="Digite seu usuário" required>
+                    <input type="text" class="form-control" name="username" id="username"
+                        placeholder="Digite seu usuário" required>
                 </div>
 
-                <!-- Password -->
                 <div class="mb-3">
                     <label for="password" class="form-label">Senha</label>
-                    <input type="password" class="form-control" name="password" id="password" placeholder="Digite sua senha" required>
+                    <input type="password" class="form-control" name="password" id="password"
+                        placeholder="Digite sua senha" required>
                 </div>
 
-                <!-- Role -->
                 <div class="mb-3">
-                    <label for="role" class="form-label">Selecione seu papel</label>
-                    <select name="role" id="role" class="form-select" required>
+                    <label for="funcao" class="form-label">Selecione seu papel</label>
+                    <select name="funcao" id="funcao" class="form-select" required>
                         <option value="aluno">Aluno</option>
                         <option value="professor">Professor</option>
                     </select>
                 </div>
 
-                <!-- Botões -->
                 <div class="d-grid gap-2">
                     <button type="submit" class="btn btn-primary">Cadastrar</button>
                     <a href="/login/" class="btn btn-outline-secondary">Voltar para Login</a>

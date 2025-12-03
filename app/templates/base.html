@@ -8,16 +8,19 @@
     <title>Página Inicial</title>
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
     {% include "partials/header.html" %}
 
-    <main>
+    <main class="flex-fill">
         {% block content %}
+
         {% endblock %}
     </main>
 
     {% include "partials/footer.html" %}
 
+
+    #ACTIVE (ATIVO) NOS ITENS HREF DAS NAVS
     <script>
         const currentLocation = window.location.pathname;
         const menuItems = document.querySelectorAll('.nav-link');
@@ -29,8 +32,8 @@
         });
     </script>
 
+    #TEMAS
     <script>
-        // Funções para armazenar e recuperar tema
         const getStoredTheme = () => localStorage.getItem('theme');
         const setStoredTheme = theme => localStorage.setItem('theme', theme);
         const getPreferredTheme = () => {
@@ -39,7 +42,6 @@
             return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         };
 
-        // Aplica o tema atual ao carregar a página
         const applyTheme = theme => {
             document.documentElement.setAttribute('data-bs-theme', theme);
             document.querySelectorAll('[data-bs-theme-value]').forEach(btn => {
@@ -52,18 +54,18 @@
             });
         };
 
-        // Aplica o tema preferido ao carregar
         applyTheme(getPreferredTheme());
 
-        // Evento de clique nos botões
         document.querySelectorAll('[data-bs-theme-value]').forEach(button => {
             button.addEventListener('click', () => {
                 const theme = button.getAttribute('data-bs-theme-value');
-                setStoredTheme(theme); // salva no localStorage
-                applyTheme(theme);     // aplica imediatamente
+                setStoredTheme(theme);
+                applyTheme(theme);
             });
         });
     </script>
+
+    #BOOTSTRAP
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>

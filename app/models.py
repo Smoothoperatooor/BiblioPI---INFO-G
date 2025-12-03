@@ -3,11 +3,12 @@ from django.contrib.auth.models import User
 
 class Usuario(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    ROLE_CHOICES = [
+    FUNCOES = [
         ('aluno', 'Aluno'),
         ('professor', 'Professor'),
     ]
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
+    funcao = models.CharField(max_length=10, choices=FUNCOES)
+    nivel = models.CharField(max_length=20, default="Nenhum")
 
 class Arquivo(models.Model):
     CATEGORIAS = (

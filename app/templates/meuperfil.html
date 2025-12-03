@@ -2,79 +2,73 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container mt-5 mb-5">
 
-    <h2 class="text-center mb-4">Meu Perfil</h2>
+    <!-- Header do Perfil -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-8">
+            <div class="card shadow border-0 p-4 text-center"
+                style="background: linear-gradient(135deg, #0d6efd, #6610f2); color: white;">
 
-    <!-- Cartões de Resumo -->
-    <div class="row text-center mb-4">
+                <h3 class="mb-1">{{ request.user.username }}</h3>
+                <p class="mb-0 opacity-75">{{ request.user.usuario.funcao }}</p>
+                {% if nivel %}
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+                    🏅 {{ nivel }}
+                    <span class="visually-hidden">unread messages</span>
+                </span>
 
-        <div class="col-md-4">
-            <div class="card shadow-sm p-3">
-                <h4 class="text-primary">Mensagens</h4>
-                <h2>{{ total_mensagens }}</h2>
+                {% endif %}
             </div>
         </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-sm p-3">
-                <h4 class="text-success">Arquivos Enviados</h4>
-                <h2>{{ total_arquivos }}</h2>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-sm p-3">
-                <h4 class="text-info">Dias na Plataforma</h4>
-                <h2>{{ dias_no_sistema }}</h2>
-            </div>
-        </div>
-
     </div>
 
-    <!-- Gráfico -->
-    <div class="card p-4 shadow-sm">
-        <h4 class="text-center mb-3">Estatísticas do Usuário</h4>
-        <canvas id="perfilChart"></canvas>
+    <div class="row text-center g-4 mb-4">
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-dark  p-4 h-100 cartao">
+                <div class="mb-2 text-primary fs-2">
+                    <i class="bi bi-chat-square-quote"></i>
+                </div>
+                <h5 class="fw-semibold">Mensagens</h5>
+                <h2 class="text-primary fw-bold">{{ total_mensagens }}</h2>
+            </div>
+        </div>
+
+       
+        <div class="col-md-4">
+            <div class="card shadow-sm border-dark  p-4 h-100 cartao">
+                <div class="mb-2 text-success fs-2">
+                    <i class="bi bi-file-arrow-up"></i>
+                </div>
+                <h5 class="fw-semibold">Trabalhos Enviados</h5>
+                <h2 class="text-success fw-bold">{{ total_arquivos }}</h2>
+            </div>
+        </div>
+
+        
+        <div class="col-md-4">
+            <div class="card shadow-sm border-dark  p-4 h-100 cartao">
+                <div class="mb-2 text-info fs-2">
+                    <i class="bi bi-calendar-event"></i>
+                </div>
+                <h5 class="fw-semibold">Dias na Plataforma</h5>
+                <h2 class="text-info fw-bold">{{ dias_no_sistema }}</h2>
+            </div>
+        </div>
+
     </div>
 
 </div>
 
-<!-- Script do Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-    const ctx = document.getElementById('perfilChart').getContext('2d');
-
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: {{ labels| safe }},
-        datasets: [{
-            label: 'Atividades',
-            data: {{ data| safe }},
-        borderWidth: 2,
-        backgroundColor: [
-            'rgba(54, 162, 235, 0.6)',
-            'rgba(75, 192, 192, 0.6)',
-            'rgba(153, 102, 255, 0.6)',
-        ],
-        borderColor: [
-            'rgba(54, 162, 235, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-        ],
-            }]
-        },
-        options: {
-        responsive: true,
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
+<style>
+    .cartao {
+        transition: all 0.25s ease-in-out;
     }
-    });
-</script>
 
+    .cartao:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+</style>
 {% endblock %}

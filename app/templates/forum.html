@@ -7,23 +7,110 @@
     }
 </style>
 
-    <div class="row">
-        <!-- Sidebar -->
-        <div class="col-3">
-            {% include "partials/sidebar.html" %}
-        </div>
-        <!-- Chat dinâmico -->
-        <div class="col-9">
-            {% if topico %}
-            {% include "chat.html" %}
-            {% else %}
-            <div class="container p-5">
-                <div class="alert alert-warning" role="alert">
-                    Escolha um tópico
-                </div>
+<div class="row">
+    <div class="col-3">
+        <div class="flex-column align-items-stretch flex-shrink-0 bg-body-tertiary"
+            style="height: 100vh; overflow-y: auto; overflow-x: hidden;">
+            <a href="/"
+                class="d-flex align-items-center flex-shrink-0 p-3 link-body-emphasis text-decoration-none border-bottom">
+                <span class="fs-5 fw-semibold">Tópicos <i class="bi bi-chat-left-dots"></i></span>
+            </a>
+
+            <div class="list-group list-group-flush border-bottom scrollarea" id="lista-topicos">
+                {% for topico in topicos %}
+                <a href="{% url 'forum' topico.id %}" class="list-group-item list-group-item-action py-3 lh-sm">
+
+                    <div class="d-flex w-100 align-items-center justify-content-between">
+                        <p class="fw-semibold mb-1">{{ topico.nome }}</p>
+                    </div>
+
+                    <div class="col-12 mb-1 small">
+                        <p class="mb-1">{{ topico.desc }}</p>
+                    </div>
+
+                    {% if user.is_authenticated %}
+                    {% if user.usuario.role == "professor" or topico.usuario == User %}
+                    <div class="d-flex justify-content-end mt-2">
+                        <form action="{% url 'deletarTopico' topico.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="bi bi-trash"></i> Deletar
+                            </button>
+                        </form>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                </a>
+                {% endfor %}
             </div>
 
-            {% endif %}
+            <div class="row border-top">
+                <div class="col-12 p-3">
+                    {% if user.is_authenticated %}
+                    <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
+                        data-bs-target="#modalNovoTopico">
+                        + Adicionar Tópico
+                    </button>
+                    {% else %}
+                    <button type="button" class="btn btn-secondary w-100" disabled>
+                        Login necessário
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="modal fade" id="modalNovoTopico" tabindex="-1" aria-labelledby="modalNovoTopicoLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="POST" action="{% url 'novoTopico' %}">
+                            {% csrf_token %}
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalNovoTopicoLabel">Novo Tópico</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <div class="modal-body">
+                                <input required name="nome" type="text" class="form-control"
+                                    placeholder="Nome do tópico">
+                            </div>
+
+                            <div class="modal-body">
+                                <input required name="desc" type="text" class="form-control" placeholder="Descrição">
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Criar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const currentUrl = window.location.pathname;
+                const links = document.querySelectorAll("#lista-topicos a");
+
+                links.forEach(link => {
+                    if (link.getAttribute("href") === currentUrl) {
+                        link.classList.add("active");
+                    }
+                });
+            });
+        </script>
     </div>
+    <div class="col-9">
+        {% if topico %}
+        {% include "chat.html" %}
+        {% else %}
+        <div class="container p-5">
+            <div class="alert alert-warning" role="alert">
+                Escolha um tópico
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
