@@ -8,10 +8,9 @@
             <input class="form-control" type="search" name="valcate" placeholder="Buscar por nome, descrição..."
                 aria-label="Search" value="{{ request.GET.valcate }}">
 
-            <!-- Não encostar nesse trecho, tendo em vista que o site inteiro depende dele aparentemente (é sério...) -->
+            
             <select name="categoria" class="form-select">
                 <option value="">Todas</option>
-
                 {% for bancoCate, usuCate in categorias %}
                 <option value="{{ bancoCate }}">
                     {{ usuCate }}

@@ -29,7 +29,7 @@
                     </div>
 
                     {% if user.is_authenticated %}
-                    {% if user.usuario.role == "professor" or topico.usuario == User %}
+                    {% if user.usuario.funcao == "professor" or topico.usuario == request.user %}
                     <div class="d-flex justify-content-end mt-2">
                         <form action="{% url 'deletarTopico' topico.id %}" method="post">
                             {% csrf_token %}
